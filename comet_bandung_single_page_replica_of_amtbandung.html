@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Comet Bandung - Pencarian FAT & Tikor</title>
+  <style>
+    :root{--bg:#0f1720;--card:#0b1220;--accent:#ff7a18;--muted:#98a0a8;--glass:rgba(255,255,255,0.04)}
+    html,body{background:url('BACKGROUND_COMET.jpg') center/cover no-repeat fixed;}
+    body{background:linear-gradient(180deg,#0b0f13 0%, #11151a 60%, #0b0f13 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:32px}
+    .wrap{width:100%;max-width:980px}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ffb86b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:22px;box-shadow:0 8px 30px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.03)}
+
+    .controls{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .controls button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
+    .controls button.active{background:linear-gradient(90deg,var(--accent),#ffb86b);border:none;color:#071018;font-weight:600}
+
+    .search{display:flex;gap:12px}
+    .search input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:15px}
+    .search button{padding:12px 16px;border-radius:10px;border:none;background:var(--accent);color:#071018;font-weight:700;cursor:pointer}
+
+    .tips{margin-top:12px;color:var(--muted);font-size:13px}
+
+    .result{margin-top:18px}
+    .item{display:flex;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03);margin-bottom:10px}
+    .item .left{display:flex;gap:12px;align-items:center}
+    .chip{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-weight:700;color:var(--accent);border:1px solid rgba(255,255,255,0.02)}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media (max-width:580px){.wrap{padding:0 12px}header{gap:10px}
+      h1{font-size:18px}
+      .logo{width:48px;height:48px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">CB</div>
+        <div>
+          <h1>Comet Bandung</h1>
+          <div class="sub">Pencarian FAT & Tikor — Regional Bandung</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <div class="controls">
+        <button id="btnPencarian" class="active">Pencarian FAT</button>
+        <button id="btnCheck">Cek ONT</button>
+      </div>
+
+      <div class="search">
+        <input id="q" placeholder="Cari FAT terdekat / kode FAT / nomor ONT..." />
+        <button id="go">Cari</button>
+      </div>
+
+      <div class="tips">Contoh: <em>cmt-00114662</em> atau alamat/kode FAT</div>
+
+      <div id="results" class="result"></div>
+
+      <footer>Comet Bandung © <span id="year"></span> — Dibuat untuk demo</footer>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const results = document.getElementById('results');
+    const q = document.getElementById('q');
+    document.getElementById('go').addEventListener('click', doSearch);
+    document.getElementById('q').addEventListener('keydown', e=>{if(e.key==='Enter')doSearch();});
+
+    function doSearch(){
+      const v = q.value.trim();
+      results.innerHTML = '';
+      if(!v){results.innerHTML = `<div class="item"><div class="left">Masukkan kata kunci untuk mencari FAT atau ONT.</div></div>`; return}
+
+      // Simulasi hasil pencarian — ganti dengan panggilan API Anda
+      const sample = [
+        {id:'cmt-00114662', name:'FAT - Kebonjeruk', addr:'Jl. Kebon Jeruk No.12', status:'Aktif'},
+        {id:'cmt-00114663', name:'FAT - Antapani', addr:'Jl. Antapani Raya 45', status:'Perbaikan'}
+      ];
+
+      const filtered = sample.filter(s=>s.id.includes(v) || s.name.toLowerCase().includes(v.toLowerCase()) || s.addr.toLowerCase().includes(v.toLowerCase()));
+      const show = filtered.length?filtered:sample.slice(0,2);
+
+      show.forEach(s=>{
+        const it = document.createElement('div'); it.className='item';
+        it.innerHTML = `<div class="left"><div class="chip">${s.id}</div><div style="margin-left:10px"><div style="font-weight:700">${s.name}</div><div style="color:var(--muted);font-size:13px">${s.addr}</div></div></div><div style="color:var(--muted);font-weight:700">${s.status}</div>`;
+        results.appendChild(it);
+      });
+    }
+  </script>
+</body>
+</html>
